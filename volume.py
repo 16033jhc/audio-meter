@@ -1,8 +1,6 @@
 # Import libraries
 import pyaudio
 import audioop
-import numpy as np
-from math import log10
 import time
 
 # Initialise pyaudio and open audio input stream
@@ -20,15 +18,14 @@ stream = p.open(format=pyaudio_format,
                 input=True,
                 frames_per_buffer=buffer_size)
 
-while True:
+def main():
     for i in range(0, int(samplerate / buffer_size)):
         data = stream.read(buffer_size)
-        rms = audioop.rms(data, 2)
+        vol = audioop.rms(data, 1)
+        time.sleep(2)
 
-    print(rms)
-    db = 20 * log10(rms)
-    print(f"RMS: {rms} DB: {db}")
+        print(f"Volume (in relative DB): {vol}")
 
-stream.stop_stream()
-stream.close()
-p.terminate()
+while True:
+    main()
+    
